@@ -20,6 +20,8 @@ public class ScriptCameraShake : MonoBehaviour {
 
     Vector3 originalPosition = Vector3.zero;
 
+    public bool testOn = false;
+
     void Update()
     {
 
@@ -35,10 +37,10 @@ public class ScriptCameraShake : MonoBehaviour {
             transform.localPosition = originalPosition;
         }
 
-        //if (Input.GetButton("Jump"))
-        //{
-        //    ApplyShake(shakeTime);
-        //}
+        if (testOn && Input.GetButton("Jump"))
+        {
+            ApplyShake(shakeTime);
+        }
     }
 
     /// <summary>
