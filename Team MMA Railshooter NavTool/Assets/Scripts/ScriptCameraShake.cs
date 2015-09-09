@@ -22,6 +22,7 @@ public class ScriptCameraShake : MonoBehaviour {
 
     void Update()
     {
+
         if(shake > 0)
         {
             transform.localPosition = originalPosition + Random.insideUnitSphere * magnitude;
@@ -34,10 +35,10 @@ public class ScriptCameraShake : MonoBehaviour {
             transform.localPosition = originalPosition;
         }
 
-        if (Input.GetButton("Jump"))
-        {
-            ApplyShake(shakeTime);
-        }
+        //if (Input.GetButton("Jump"))
+        //{
+        //    ApplyShake(shakeTime);
+        //}
     }
 
     /// <summary>
