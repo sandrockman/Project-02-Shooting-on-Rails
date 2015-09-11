@@ -2,6 +2,11 @@
 using System.Collections;
 using UnityEngine.UI;
 
+/// <summary>
+/// Author: Andew Seba
+/// Desceiprion: Displays a designer specified sprite object on the screen
+///     for a specified amount of time.
+/// </summary>
 public class ScriptSplatter : MonoBehaviour {
 
     [Tooltip("Enables Splat")]
@@ -11,13 +16,13 @@ public class ScriptSplatter : MonoBehaviour {
     [Range(0,10)]
     public float effectTime = 1.0f;
 
-    [Tooltip("Percent of effect time spent fading in.")]
-    [Range(0,0.5f)]
+    [Tooltip("Time of effect time spent fading in.")]
+    [Range(0, 3f)]
     public float fadeInTime = 0.1f;
 
-    [Tooltip("Percent of effect time spent fading out.")]
-    [Range(0, 0.5f)]
-    public float fadeOutTime = 0.1f;
+    [Tooltip("Time of effect time spent fading out.")]
+    [Range(0, 3f)]
+    public float fadeOutTime = 1f;
 
     [Tooltip("Place your splat sprite or texture here.")]
     public GameObject splatImage;
@@ -87,7 +92,6 @@ public class ScriptSplatter : MonoBehaviour {
         {
             splatColor = Color.Lerp(Color.clear, splatRenderer.color, progress);
             progress += increment;
-            Debug.Log(splatColor.a + "<" + progress +">");
             yield return null;
         }
 
@@ -104,8 +108,8 @@ public class ScriptSplatter : MonoBehaviour {
         {
             splatColor = Color.Lerp(splatRenderer.color, Color.clear, progress);
             progress += increment;
-            Debug.Log(splatColor.a + "<" + progress + ">");
             yield return null;
         }
+        splatColor = Color.clear;
     }
 }
