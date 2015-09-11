@@ -10,7 +10,7 @@ using UnityEngine.UI;
 public class ScriptSplatter : MonoBehaviour {
 
     [Tooltip("Enables Splat")]
-    public bool activateSplat = false;
+    public bool enable = false;
 
     [Tooltip("Total time the splatter will be on screen")]
     [Range(0,10)]
@@ -22,7 +22,7 @@ public class ScriptSplatter : MonoBehaviour {
 
     [Tooltip("Time of effect time spent fading out.")]
     [Range(0, 3f)]
-    public float fadeOutTime = 1f;
+    public float fadeOutTime = 0.1f;
 
     [Tooltip("Place your splat sprite or texture here.")]
     public GameObject splatImage;
@@ -36,26 +36,24 @@ public class ScriptSplatter : MonoBehaviour {
     Rect splatRect;
     Color splatColor;
     float elapsedTime = 0.0f;
-    int padding = 800;
     float smoothness = 0.02f;
 
-    void Start()
+    public void Awake()
     {
         splatRenderer = splatImage.GetComponent<SpriteRenderer>();
+    }
+
+    public void Update()
+    {
         
-        if (activateSplat)
+        if (enable)
         {
-            splatRect = new Rect(Random.Range(0, Screen.width - padding), Random.Range(0, Screen.height - padding), Screen.width / 16 * imageScale, Screen.height / 9 * imageScale);
+            splatRect = new Rect(Random.Range(0, Screen.width /2), Random.Range(0, Screen.height /2), Screen.width / 16 * imageScale, Screen.height / 9 * imageScale);
             StartCoroutine("SplatFadeIn");
-            activateSplat = false;
+            enable = false;
         }
 
     }
-
-    //void FadeIn()
-    //{
-    //    splatColor = Color.Lerp(Color.clear, splatColor, 1.5f * Time.deltaTime);
-    //}
 
     //Draws the splat
     void OnGUI()
@@ -69,16 +67,12 @@ public class ScriptSplatter : MonoBehaviour {
         float timePassed = 0.0f;
         
 
-        while (timePassed <= effectTime)
+        while (timePassed <= effectTime - fadeOutTime)
         {
             timePassed += 1 * Time.deltaTime;
-
-            if(timePassed < (effectTime - fadeOutTime))
-            {
-                StartCoroutine("SplatFadeOut");
-            }
             yield return null;
         }
+        StartCoroutine("SplatFadeOut");
     }
 
     //Fades the splat
@@ -88,7 +82,7 @@ public class ScriptSplatter : MonoBehaviour {
 
         float increment = smoothness / fadeInTime;
 
-        while(progress < 1)
+        while(progress <= 1)
         {
             splatColor = Color.Lerp(Color.clear, splatRenderer.color, progress);
             progress += increment;
