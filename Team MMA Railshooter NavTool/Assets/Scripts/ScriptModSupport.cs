@@ -94,6 +94,7 @@ public class ScriptModSupport : MonoBehaviour {
                             break;
                         case MovementTypes.BEZIER:
                             //Bezier waypoint spawning Code
+                            break;
                     }
                 }
                 else if( keywords[0].ToUpper() == "E")
@@ -111,6 +112,7 @@ public class ScriptModSupport : MonoBehaviour {
                             //Splatter waypoint spawning Code
                         case EffectTypes.WAIT:
                             //Effect Wait waypoint spawning Code
+                            break;
                     }
                 }
                 else if(keywords[0].ToUpper() == "F")
