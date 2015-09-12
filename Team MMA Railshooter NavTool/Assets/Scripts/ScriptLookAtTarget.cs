@@ -11,39 +11,48 @@ public class ScriptLookAtTarget : MonoBehaviour {
     public float rotateSpeed = 0.5f;
 
     [Tooltip("Place the target object for the camera to look at.")]
-    public GameObject target;
+    public GameObject[] targets;
 
     [Tooltip("How long you will lock on target.")]
     public float lockTime = 3.0f;
 
     Quaternion startRotation;
     
+    //testing
+    void Update()
+    {
+        if (Input.GetButton("Jump"))
+        {
+            Activate();
+        }
+    }
+
     public void Activate()
     {
         startRotation = transform.rotation;
-        Debug.Log(startRotation);
         StartCoroutine("LookAtTarget");
     }
 
     IEnumerator LookAtTarget()
     {
-        float timeElapsed = 0.0f;
-        while (timeElapsed < lockTime)
+        foreach(GameObject target in targets)
         {
-            timeElapsed += Time.deltaTime;
-            Quaternion neededRotation = Quaternion.LookRotation(target.transform.position - transform.position);
-            transform.rotation = Quaternion.Slerp(transform.rotation, neededRotation, Time.deltaTime * rotateSpeed);
-            yield return null;
+            float timeElapsed = 0.0f;
+            while (timeElapsed < lockTime)
+            {
+                timeElapsed += Time.deltaTime;
+                Quaternion neededRotation = Quaternion.LookRotation(target.transform.position - transform.position);
+                transform.rotation = Quaternion.Slerp(transform.rotation, neededRotation, Time.deltaTime * rotateSpeed);
+                yield return null;
+            }
         }
+
         StartCoroutine("ReturnLook");
     }
 
     IEnumerator ReturnLook()
     {
         StopCoroutine("LookAtTarget");
-        //Debug.Log("Entered Return");
-        //Debug.Log(startRotation);
-        //Debug.Log(transform.rotation);
         while (transform.forward != Vector3.forward)
         {
 
@@ -51,6 +60,5 @@ public class ScriptLookAtTarget : MonoBehaviour {
 
             yield return null;
         }
-        //Debug.Log("Exited Return! congrats!!");
     }
 }

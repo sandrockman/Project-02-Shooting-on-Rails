@@ -21,28 +21,22 @@ public class ScriptCameraShake : MonoBehaviour {
 
     Vector3 originalPosition;
 
-    public bool enable = false;
-
-
     //change to 'public void Activate()' when wanting to implement.
     public void Activate()
     {
         originalPosition = transform.position;
-        shake = shakeTime;
         StartCoroutine("ShakeIt");
     }
 
     IEnumerator ShakeIt()
     {
-        while (shake > 0)
+        while (shakeTime > 0)
         {
             transform.localPosition = originalPosition + Random.insideUnitSphere * magnitude;
 
-            shake -= Time.deltaTime * 1;
+            shakeTime -= Time.deltaTime * 1;
             yield return null;
         }
-
-        shake = 0;
         transform.localPosition = originalPosition;
     }
 

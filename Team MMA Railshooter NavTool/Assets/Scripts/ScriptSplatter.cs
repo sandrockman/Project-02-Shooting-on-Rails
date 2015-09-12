@@ -35,10 +35,24 @@ public class ScriptSplatter : MonoBehaviour {
     float elapsedTime = 0.0f;
     float smoothness = 0.02f;
 
+#if UNITYEDITOR
     public void Awake()
+    {
+        if(splatImage != null)
+        {
+            splatRenderer = splatImage.GetComponent<SpriteRenderer>();
+        }
+        else
+        {
+            Debug.Log("No sprite image assigned to script. Drag it from the prefabs.");
+        }
+    }
+#else
+    void Awake()
     {
         splatRenderer = splatImage.GetComponent<SpriteRenderer>();
     }
+#endif
 
     public void Activate()
     {
