@@ -2,6 +2,10 @@
 using System.Collections;
 using UnityEditor;
 
+/*
+ * @author Mike Dobson
+ * */
+
 [CustomPropertyDrawer(typeof(ScriptMove))]
 public class MovementEditorDrawer :  PropertyDrawer {
 

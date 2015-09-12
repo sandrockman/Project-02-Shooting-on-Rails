@@ -2,6 +2,10 @@
 using System.Collections;
 using UnityEditor;
 
+/*
+ * @author Mike Dobson
+ * */
+
 [CustomEditor(typeof(ScriptEngine))]
 public class EngineEditor :  Editor
 {
@@ -21,11 +25,10 @@ public class EngineEditor :  Editor
 		//-------------------------------
 		//Place your custom editor stuffs
 		//serializedObject.waypoints
-		SerializedProperty waypointsArray = serializedObject.FindProperty ("waypoints");
+		SerializedProperty waypointsArray = serializedObject.FindProperty ("movements");
 
         EditorGUILayout.PropertyField(waypointsArray);
 
-        
         if (waypointsArray.isExpanded)
         {
             //EditorGUILayout.PropertyField(waypointsArray.arraySize)
@@ -33,7 +36,9 @@ public class EngineEditor :  Editor
             EditorGUI.indentLevel++;
             for (int i = 0; i < waypointsArray.arraySize; i++)
             {
+                EditorGUILayout.LabelField("waypoint " + i);
                 EditorGUILayout.PropertyField(waypointsArray.GetArrayElementAtIndex(i));
+                
             }
             EditorGUI.indentLevel--;
         }

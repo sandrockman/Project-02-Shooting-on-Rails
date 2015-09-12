@@ -7,7 +7,7 @@ using System.Collections;
 [System.Serializable]
 public class ScriptWaypoints : MonoBehaviour
 {
-    public WaypointType waypointType;
+ /*   public WaypointType waypointType;
 
     public MovementType movementType;
     public float waitTime;
@@ -27,5 +27,5 @@ public class ScriptWaypoints : MonoBehaviour
     public virtual void GetWaypointInfo()
     {
         Debug.Log("Something is wrong here. Check overrides for GetWaypointInfo()");
-    }
+    }*/
 }
