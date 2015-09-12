@@ -1,0 +1,22 @@
+Waypoints Variable List
+
+Type
+
+Movement
+	MovementType
+	WaitTime (SemiHidden)
+	MovementTime
+	NextPoint
+
+Facing
+	FacingType
+	Targets[] (Length will be hidden for LookAndReturn)
+	FacingTimes[] (Length will be Targets.Length +1)
+	HoldTimes[] (Length will be Targets.Length)
+
+Effect
+	EffectType
+	FadeInTime (Not for Shake)
+	FadeOutTime (Not for Shake)
+	Duration (How long the splatter or fade in/out stays at full strength, or how long the shake lasts)
+
