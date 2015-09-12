@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// @Author Marshall Mason
+/// </summary>
 public enum WaypointType
 {
     Movement,
@@ -19,14 +22,16 @@ public enum MovementTypes
 public enum FacingType
 {
     LookAndReturn,
-    LookChain
+    LookChain,
+    Wait
 }
 
 public enum EffectType
 {
     Shake,
     Splatter,
-    FadeInOut
+    FadeInOut,
+    Wait
 }
 
 public static class ScriptShooterNavEnums{

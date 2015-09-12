@@ -1,6 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// @Author Marshall Mason
+/// </summary>
+[System.Serializable]
 public class ScriptWaypoints : MonoBehaviour
 {
  /*   public WaypointType waypointType;
