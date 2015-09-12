@@ -6,7 +6,8 @@ using System.Collections;
  * */
 
 [System.Serializable]
-public class ScriptWaypoint{
+public class ScriptMovements
+{
 
     [Tooltip("The amount of time that the player will take to complete this waypoint")]
     public float waypointTime;

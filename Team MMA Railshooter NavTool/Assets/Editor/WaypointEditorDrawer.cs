@@ -6,10 +6,10 @@ using UnityEditor;
  * @author Mike Dobson
  * */
 
-[CustomPropertyDrawer(typeof(ScriptWaypoint))]
+[CustomPropertyDrawer(typeof(ScriptMovements))]
 public class WaypointEditorDrawer : PropertyDrawer 
 {
-    ScriptWaypoint waypointScript;
+    ScriptMovements waypointScript;
     float extraHeight = 40f;
     float displaySize = 20f;
     float numDisplays = 0f;

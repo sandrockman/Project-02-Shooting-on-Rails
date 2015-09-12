@@ -6,7 +6,7 @@ using System.Collections;
  * */
 
 [System.Serializable]
-public class ScriptMove : ScriptWaypoint {
+public class ScriptMove : ScriptMovements {
 
     //public Vector3 target;
     //public float moveTime;
