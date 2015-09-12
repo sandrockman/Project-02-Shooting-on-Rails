@@ -18,49 +18,57 @@ public class ScriptCameraShake : MonoBehaviour {
 
     float shake = 0f;
 
-    Vector3 originalPosition = Vector3.zero;
+    Vector3 originalPosition;
 
-    public bool testOn = false;
+    //public bool testOn = false;
 
-    void Update()
+    public bool enable = false;
+
+
+    //change to 'public void Activate()' when wanting to implement.
+    public void Update()
     {
+        if (enable)
+        {
+            originalPosition = transform.position;
+            shake = shakeTime;
+            StartCoroutine("ShakeIt");
+            enable = false;
+        }
+    }
 
-        if(shake > 0)
+    IEnumerator ShakeIt()
+    {
+        while (shake > 0)
         {
             transform.localPosition = originalPosition + Random.insideUnitSphere * magnitude;
 
             shake -= Time.deltaTime * 1;
-        }
-        else
-        {
-            shake = 0;
-            transform.localPosition = originalPosition;
+            yield return null;
         }
 
-        if (testOn && Input.GetButton("Jump"))
-        {
-            ApplyShake(shakeTime);
-        }
+        shake = 0;
+        transform.localPosition = originalPosition;
     }
 
-    /// <summary>
-    /// Start's shaking for specified amount of time.
-    /// </summary>
-    /// <param name="pShakeLength"></param>
-    public void ApplyShake(float pShakeLength)
-    {
-        shake = pShakeLength;
-    }
+    ///// <summary>
+    ///// Start's shaking for specified amount of time.
+    ///// </summary>
+    ///// <param name="pShakeLength"></param>
+    //public void ApplyShake(float pShakeLength)
+    //{
+    //    shake = pShakeLength;
+    //}
 
-    /// <summary>
-    /// Start's shaking for specified amount of time and sets magnitude.
-    /// </summary>
-    /// <param name="pShakeLength"></param>
-    /// <param name="pMagnitude"></param>
-    public void ApplyShake(float pShakeLength, float pMagnitude)
-    {
-        shake = pShakeLength;
-        magnitude = pMagnitude;
-    }
+    ///// <summary>
+    ///// Start's shaking for specified amount of time and sets magnitude.
+    ///// </summary>
+    ///// <param name="pShakeLength"></param>
+    ///// <param name="pMagnitude"></param>
+    //public void ApplyShake(float pShakeLength, float pMagnitude)
+    //{
+    //    shake = pShakeLength;
+    //    magnitude = pMagnitude;
+    //}
 
 }
