@@ -409,17 +409,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waypoints:
-  - waypointTime: 0
-    moveType: 0
-    waypoint: {fileID: 0}
+  - waypointTime: 5
+    moveType: 1
+    waypoint: {fileID: 1003849254}
     target: {x: 0, y: 0, z: 0}
-  - waypointTime: 0
+  - waypointTime: 2
     moveType: 0
-    waypoint: {fileID: 0}
+    waypoint: {fileID: 1003849254}
     target: {x: 0, y: 0, z: 0}
-  - waypointTime: 0
-    moveType: 0
-    waypoint: {fileID: 0}
+  - waypointTime: 5
+    moveType: 1
+    waypoint: {fileID: 765729441}
     target: {x: 0, y: 0, z: 0}
 --- !u!23 &2086889109
 MeshRenderer:
