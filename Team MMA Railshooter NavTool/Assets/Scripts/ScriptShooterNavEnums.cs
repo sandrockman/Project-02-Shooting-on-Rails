@@ -11,27 +11,27 @@ public enum WaypointType
     Effect
 }
 
-public enum MovementType
+//@Mike
+public enum MovementTypes
 {
-    Wait,
-    LookAndReturn,
-    LookChain,
-    StraightLine
+    WAIT,
+    MOVE,
+    BEZIER
+};
+
+public enum FacingTypes
+{
+    LOOKAT,
+    LOOKCHAIN,
+    WAIT
 }
 
-public enum FacingType
+public enum EffectTypes
 {
-    LookAndReturn,
-    LookChain,
-    Wait
-}
-
-public enum EffectType
-{
-    Shake,
-    Splatter,
-    FadeInOut,
-    Wait
+    SHAKE,
+    SPLATTER,
+    FADE,
+    WAIT
 }
 
 public static class ScriptShooterNavEnums{

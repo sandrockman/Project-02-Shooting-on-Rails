@@ -1,9 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/*
+ * @author Mike Dobson
+ * */
+
 public class ScriptEngine : MonoBehaviour {
 
-	public ScriptWaypoint[] waypoints;
+	public ScriptMovements[] movements;
 
 	// Use this for initialization
 	void Start () 
@@ -36,32 +40,32 @@ public class ScriptEngine : MonoBehaviour {
 
 	IEnumerator MovementEngine()
 	{
-		foreach(ScriptWaypoint wp in waypoints)
+		foreach(ScriptMovements move in movements)
 		{
-			Debug.Log(wp.moveType);
-			switch(wp.moveType)
+			Debug.Log(move.moveType);
+			switch(move.moveType)
 			{
 				case MovementTypes.MOVE:
 					//Grab the movement script off the waypoint
 					//ScriptMove movementScript = (ScriptMove)wp;
 
-                    wp.target = wp.waypoint.transform.position;
+                    move.target = move.waypoint.transform.position;
 
 					//Do the movement coroutine with the help of the movement script
-					StartCoroutine(movementMove (wp.target, wp.waypointTime));
+                    StartCoroutine(movementMove(move.target, move.waypointTime));
 					
 					//Wait for the specified amount of time on the movement waypoint
-					yield return new WaitForSeconds(wp.waypointTime);
+                    yield return new WaitForSeconds(move.waypointTime);
 					break;
 				case MovementTypes.WAIT:
 					//Grabs the wait script off the waypoint
 					//ScriptWait waitScript = (ScriptWait)wp;
 					
 					//Does the wait
-					StartCoroutine(movementWait(wp.waypointTime));
+                    StartCoroutine(movementWait(move.waypointTime));
 					
 					//Waits for the specified amount of time
-					yield return new WaitForSeconds(wp.waypointTime);
+                    yield return new WaitForSeconds(move.waypointTime);
 					break;
 				default:
 					Debug.Log ("Invalid movement type!");
@@ -102,4 +106,29 @@ public class ScriptEngine : MonoBehaviour {
 		yield return new WaitForSeconds (time);
 		Debug.Log ("next waypoint");
 	}
+
+    void OnDrawGizmos()
+    {
+        Vector3 lineStarting = transform.position;
+        foreach(ScriptMovements move in movements)
+        {
+            switch(move.moveType)
+            {
+                case MovementTypes.MOVE:
+                    Gizmos.color = Color.blue;
+                    Gizmos.DrawLine(lineStarting, move.target);
+                    lineStarting = move.target;
+                    break;
+                case MovementTypes.WAIT:
+                    Gizmos.color = Color.yellow;
+                    Gizmos.DrawWireSphere(lineStarting, 1f);
+                    break;
+                case MovementTypes.BEZIER:
+                    break;
+                default:
+                    break;
+            }
+        }
+
+    }
 }

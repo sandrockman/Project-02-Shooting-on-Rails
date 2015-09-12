@@ -2,28 +2,52 @@
 using System.Collections;
 using UnityEditor;
 
-[CustomPropertyDrawer(typeof(ScriptMove))]
-public class MovementEditorDrawer :  PropertyDrawer {
+/*
+ * @author Mike Dobson
+ * */
 
-    ScriptMove moveScript;
-    float extraHeight = 55f;
+[CustomPropertyDrawer(typeof(ScriptMovements))]
+public class MovementEditorDrawer : PropertyDrawer
+{
+    ScriptMovements waypointScript;
+    float extraHeight = 40f;
+    float displaySize = 20f;
+    float numDisplays = 0f;
+    //int shouldSolidMove = 0;
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
-        //Required for all drawers
+        EditorGUI.indentLevel++;
         EditorGUI.BeginProperty(position, label, property);
+        SerializedProperty movementTypes = property.FindPropertyRelative("moveType");
+        numDisplays = 0;
 
-        //-------------------------------
-        //Place your custom drawer stuffs here
+        //movmementType display block
+        //EditorGUILayout.PropertyField(movementTypes);
+        Rect movementTypesDisplay = new Rect(position.x, position.y + displaySize * numDisplays, position.width, 15f);
+        EditorGUI.PropertyField(movementTypesDisplay, movementTypes);
+        numDisplays += 1;
 
-        SerializedProperty moveTime = property.FindPropertyRelative("moveTime");
+        //waypointTime display block
+        SerializedProperty waypointTime = property.FindPropertyRelative("waypointTime");
+        Rect waypointTimeDisplay = new Rect(position.x, position.y + displaySize, position.width, 15f);
+        EditorGUI.PropertyField(waypointTimeDisplay, waypointTime);
+        numDisplays += 1;
 
-        EditorGUI.PropertyField(position, moveTime);
+        //target display block
+        SerializedProperty waypoint = property.FindPropertyRelative("waypoint");
+        Rect targetDisplay = new Rect(position.x, position.y + displaySize * numDisplays, position.width, 15f);
+        EditorGUI.PropertyField(targetDisplay, waypoint);
 
 
-        //--------------------------------
-
-        //Required for all drawers
         EditorGUI.EndProperty();
+        EditorGUI.indentLevel--;
     }
+
+    public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+    {
+        return base.GetPropertyHeight(property, label) + (extraHeight);
+    }
+
+
 }

@@ -7,7 +7,7 @@ using System.Collections;
 [System.Serializable]
 public class ScriptWaypoints : MonoBehaviour
 {
-    public WaypointType waypointType;
+ /*   public WaypointType waypointType;
 
     public MovementType movementType;
     public float waitTime;
@@ -19,7 +19,7 @@ public class ScriptWaypoints : MonoBehaviour
     public float[] facingTimes;
     public float[] holdTimes;
     
-    public EffectType effectType;
+    public EffectTypes effectType;
     public float fadeInTime;
     public float fadeOutTime;
     public float effectDuration;
@@ -27,5 +27,5 @@ public class ScriptWaypoints : MonoBehaviour
     public virtual void GetWaypointInfo()
     {
         Debug.Log("Something is wrong here. Check overrides for GetWaypointInfo()");
-    }
+    }*/
 }
