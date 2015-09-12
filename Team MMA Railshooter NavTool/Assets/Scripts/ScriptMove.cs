@@ -1,18 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+[System.Serializable]
 public class ScriptMove : ScriptWaypoint {
 
-    public GameObject target;
-    Transform lastPoint;
+    //public Vector3 target;
+    //public float moveTime;
 
-	// Use this for initialization
-	void Start () {
-        lastPoint = GameObject.FindGameObjectWithTag("Player").transform;
-	}
-	
-	// Update is called once per frame
-	void Update () {
-        //transform.position = Vector3.Lerp(lastPoint.position, target.transform.position, waypointTime * Time.deltaTime);
-	}
+
+
 }

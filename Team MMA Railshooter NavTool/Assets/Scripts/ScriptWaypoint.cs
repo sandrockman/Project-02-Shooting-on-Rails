@@ -1,31 +1,21 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ScriptWaypoint  {
+public enum MovementTypes
+{
+	WAIT,
+	MOVE
+};
 
-    public enum movementTypes
-    {
-        WAIT,
-        MOVE,
-    };
+[System.Serializable]
+public class ScriptWaypoint{
 
-    public int moveType;
     public float waypointTime;
 
-    public static  int numWaypoints;
-    public GameObject[] targetWaypoints = new GameObject[numWaypoints];
+    public MovementTypes moveType;
 
-	// Use this for initialization
-	void Start ()
-    {
+    public GameObject waypoint;
 
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	    foreach(GameObject wp in targetWaypoints)
-        {
+    public Vector3 target;
 
-        }
-	}
 }
