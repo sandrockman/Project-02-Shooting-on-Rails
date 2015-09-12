@@ -8,13 +8,13 @@ public enum WaypointType
     Effect
 }
 
-public enum MovementType
+//@Mike
+public enum MovementTypes
 {
-    Wait,
-    LookAndReturn,
-    LookChain,
-    StraightLine
-}
+    WAIT,
+    MOVE,
+    BEZIER
+};
 
 public enum FacingType
 {

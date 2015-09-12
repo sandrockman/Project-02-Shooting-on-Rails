@@ -1,6 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/*
+ * @author Mike Dobson
+ * */
+
 public class WaitEditorDrawer : MonoBehaviour {
 
 	// Use this for initialization

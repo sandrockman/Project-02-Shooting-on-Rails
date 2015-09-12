@@ -2,6 +2,10 @@
 using System.Collections;
 using UnityEditor;
 
+/*
+ * @author Mike Dobson
+ * */
+
 [CustomPropertyDrawer(typeof(ScriptWaypoint))]
 public class WaypointEditorDrawer : PropertyDrawer 
 {
@@ -13,6 +17,7 @@ public class WaypointEditorDrawer : PropertyDrawer
     
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
+        EditorGUI.indentLevel++;
         EditorGUI.BeginProperty(position, label, property);
         SerializedProperty movementTypes = property.FindPropertyRelative("moveType");
         numDisplays = 0;
@@ -32,9 +37,11 @@ public class WaypointEditorDrawer : PropertyDrawer
         //target display block
         SerializedProperty waypoint = property.FindPropertyRelative("waypoint");
         Rect targetDisplay = new Rect(position.x, position.y + displaySize * numDisplays, position.width, 15f);
-        EditorGUI.PropertyField(targetDisplay, waypoint);        
+        EditorGUI.PropertyField(targetDisplay, waypoint);
+
 
         EditorGUI.EndProperty();
+        EditorGUI.indentLevel--;
     }
 
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
