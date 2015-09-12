@@ -19,7 +19,7 @@ public class ScriptWaypoints : MonoBehaviour
     public float[] facingTimes;
     public float[] holdTimes;
     
-    public EffectType effectType;
+    public EffectTypes effectType;
     public float fadeInTime;
     public float fadeOutTime;
     public float effectDuration;
