@@ -7,7 +7,7 @@ using System.Collections;
 
 public class ScriptEngine : MonoBehaviour {
 
-	public ScriptWaypoint[] movements;
+	public ScriptMovements[] movements;
 
 	// Use this for initialization
 	void Start () 
@@ -40,7 +40,7 @@ public class ScriptEngine : MonoBehaviour {
 
 	IEnumerator MovementEngine()
 	{
-		foreach(ScriptWaypoint move in movements)
+		foreach(ScriptMovements move in movements)
 		{
 			Debug.Log(move.moveType);
 			switch(move.moveType)
@@ -110,7 +110,7 @@ public class ScriptEngine : MonoBehaviour {
     void OnDrawGizmos()
     {
         Vector3 lineStarting = transform.position;
-        foreach(ScriptWaypoint move in movements)
+        foreach(ScriptMovements move in movements)
         {
             switch(move.moveType)
             {
