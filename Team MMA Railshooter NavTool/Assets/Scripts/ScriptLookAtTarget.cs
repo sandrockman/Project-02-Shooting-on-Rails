@@ -16,20 +16,13 @@ public class ScriptLookAtTarget : MonoBehaviour {
     [Tooltip("How long you will lock on target.")]
     public float lockTime = 3.0f;
 
-    [Tooltip("If you want to use this script.")]
-    public bool enable = false;
-
     Quaternion startRotation;
     
-    public void Update()
+    public void Activate()
     {
-        if (enable)
-        {
-            startRotation = transform.rotation;
-            Debug.Log(startRotation);
-            StartCoroutine("LookAtTarget");
-            enable = false;
-        }
+        startRotation = transform.rotation;
+        Debug.Log(startRotation);
+        StartCoroutine("LookAtTarget");
     }
 
     IEnumerator LookAtTarget()
@@ -48,9 +41,9 @@ public class ScriptLookAtTarget : MonoBehaviour {
     IEnumerator ReturnLook()
     {
         StopCoroutine("LookAtTarget");
-        Debug.Log("Entered Return");
-        Debug.Log(startRotation);
-        Debug.Log(transform.rotation);
+        //Debug.Log("Entered Return");
+        //Debug.Log(startRotation);
+        //Debug.Log(transform.rotation);
         while (transform.forward != Vector3.forward)
         {
 
@@ -58,6 +51,6 @@ public class ScriptLookAtTarget : MonoBehaviour {
 
             yield return null;
         }
-        Debug.Log("Exited Return! congrats!!");
+        //Debug.Log("Exited Return! congrats!!");
     }
 }

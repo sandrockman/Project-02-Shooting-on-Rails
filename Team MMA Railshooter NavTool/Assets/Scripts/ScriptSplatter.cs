@@ -9,9 +9,6 @@ using UnityEngine.UI;
 /// </summary>
 public class ScriptSplatter : MonoBehaviour {
 
-    [Tooltip("Enables Splat")]
-    public bool enable = false;
-
     [Tooltip("Total time the splatter will be on screen")]
     [Range(0,10)]
     public float effectTime = 1.0f;
@@ -43,16 +40,10 @@ public class ScriptSplatter : MonoBehaviour {
         splatRenderer = splatImage.GetComponent<SpriteRenderer>();
     }
 
-    public void Update()
+    public void Activate()
     {
-        
-        if (enable)
-        {
-            splatRect = new Rect(Random.Range(0, Screen.width /2), Random.Range(0, Screen.height /2), Screen.width / 16 * imageScale, Screen.height / 9 * imageScale);
-            StartCoroutine("SplatFadeIn");
-            enable = false;
-        }
-
+        splatRect = new Rect(Random.Range(0, Screen.width /2), Random.Range(0, Screen.height /2), Screen.width / 16 * imageScale, Screen.height / 9 * imageScale);
+        StartCoroutine("SplatFadeIn");
     }
 
     //Draws the splat
@@ -62,27 +53,13 @@ public class ScriptSplatter : MonoBehaviour {
         GUI.DrawTexture(splatRect, splatRenderer.sprite.texture, ScaleMode.StretchToFill);
     }
 
-    IEnumerator SplatStay()
-    {
-        float timePassed = 0.0f;
-        
-
-        while (timePassed <= effectTime - fadeOutTime)
-        {
-            timePassed += 1 * Time.deltaTime;
-            yield return null;
-        }
-        StartCoroutine("SplatFadeOut");
-    }
-
-    //Fades the splat
     IEnumerator SplatFadeIn()
     {
         float progress = 0;
 
         float increment = smoothness / fadeInTime;
 
-        while(progress <= 1)
+        while (progress <= 1)
         {
             splatColor = Color.Lerp(Color.clear, splatRenderer.color, progress);
             progress += increment;
@@ -91,6 +68,20 @@ public class ScriptSplatter : MonoBehaviour {
 
         StartCoroutine("SplatStay");
     }
+
+    IEnumerator SplatStay()
+    {
+        float timePassed = 0.0f;
+        
+
+        while (timePassed <= effectTime)
+        {
+            timePassed += 1 * Time.deltaTime;
+            yield return null;
+        }
+        StartCoroutine("SplatFadeOut");
+    }
+
 
     IEnumerator SplatFadeOut()
     {
