@@ -19,19 +19,19 @@ public enum MovementTypes
     BEZIER
 };
 
-public enum FacingType
+public enum FacingTypes
 {
-    LookAndReturn,
-    LookChain,
-    Wait
+    LOOKAT,
+    LOOKCHAIN,
+    WAIT
 }
 
-public enum EffectType
+public enum EffectTypes
 {
-    Shake,
-    Splatter,
-    FadeInOut,
-    Wait
+    SHAKE,
+    SPLATTER,
+    FADE,
+    WAIT
 }
 
 public static class ScriptShooterNavEnums{

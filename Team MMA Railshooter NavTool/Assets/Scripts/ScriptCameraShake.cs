@@ -5,6 +5,7 @@ using System.Collections;
 /// Author: Andrew Seba
 /// Description: Tool to make the camera shake for a specified amount of time
 ///     and intensity.
+///     Call Activate to start the effect.
 /// </summary>
 public class ScriptCameraShake : MonoBehaviour {
 
@@ -20,21 +21,15 @@ public class ScriptCameraShake : MonoBehaviour {
 
     Vector3 originalPosition;
 
-    //public bool testOn = false;
-
     public bool enable = false;
 
 
     //change to 'public void Activate()' when wanting to implement.
-    public void Update()
+    public void Activate()
     {
-        if (enable)
-        {
-            originalPosition = transform.position;
-            shake = shakeTime;
-            StartCoroutine("ShakeIt");
-            enable = false;
-        }
+        originalPosition = transform.position;
+        shake = shakeTime;
+        StartCoroutine("ShakeIt");
     }
 
     IEnumerator ShakeIt()
@@ -50,25 +45,5 @@ public class ScriptCameraShake : MonoBehaviour {
         shake = 0;
         transform.localPosition = originalPosition;
     }
-
-    ///// <summary>
-    ///// Start's shaking for specified amount of time.
-    ///// </summary>
-    ///// <param name="pShakeLength"></param>
-    //public void ApplyShake(float pShakeLength)
-    //{
-    //    shake = pShakeLength;
-    //}
-
-    ///// <summary>
-    ///// Start's shaking for specified amount of time and sets magnitude.
-    ///// </summary>
-    ///// <param name="pShakeLength"></param>
-    ///// <param name="pMagnitude"></param>
-    //public void ApplyShake(float pShakeLength, float pMagnitude)
-    //{
-    //    shake = pShakeLength;
-    //    magnitude = pMagnitude;
-    //}
 
 }
