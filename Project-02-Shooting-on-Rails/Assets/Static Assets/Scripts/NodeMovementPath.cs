@@ -25,7 +25,10 @@ public class NodeMovementPath : MonoBehaviour {
 
     void OnDrawGizmos() {
         for (int i = 0; i < nodes.Length; i++) {
+            Gizmos.color = Color.yellow;
             Gizmos.DrawWireSphere(nodes[i].start, .5f);
+            Gizmos.color = Color.blue;
+            Gizmos.DrawWireSphere(nodes[i].end, .5f);
         }
     }
 
