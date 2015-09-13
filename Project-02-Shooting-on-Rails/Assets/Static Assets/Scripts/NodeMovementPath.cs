@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 using System.Collections;
 
 /// <summary>
@@ -11,12 +12,12 @@ using System.Collections;
 public class NodeMovementPath : MonoBehaviour {
     #region Fields
     
-    public MovementNode[] nodes;
+    public List<MovementNode> nodes;
 
     #endregion
 
     void Start() {
-        for (int i = 0; i < nodes.Length; i++) {
+        for (int i = 0; i < nodes.Count; i++) {
             nodes[i] = new MovementNode(Vector3.zero, Vector3.one, MovementType.Straight);
         }
     }
@@ -24,7 +25,7 @@ public class NodeMovementPath : MonoBehaviour {
     void Update() {}
 
     void OnDrawGizmos() {
-        for (int i = 0; i < nodes.Length; i++) {
+        for (int i = 0; i < nodes.Count; i++) {
             Gizmos.color = Color.yellow;
             Gizmos.DrawWireSphere(nodes[i].start, .5f);
             Gizmos.color = Color.blue;
@@ -35,12 +36,13 @@ public class NodeMovementPath : MonoBehaviour {
 }
 
 [System.Serializable]
-public struct MovementNode {
+public class MovementNode {
     //public Vector3 position;
     public Vector3 start, end;
     public Vector3 bezierControl;
     public Vector3[] lookChain;
     public MovementType type;
+    public bool visibleInInspector;
 
     public MovementNode(Vector3 startPosition, Vector3 endPosition, MovementType type) {
         start = startPosition;
@@ -48,6 +50,7 @@ public struct MovementNode {
         this.type = type;
         lookChain = new Vector3[0];
         bezierControl = Vector3.zero;
+        visibleInInspector = true;
     }
 }
 
