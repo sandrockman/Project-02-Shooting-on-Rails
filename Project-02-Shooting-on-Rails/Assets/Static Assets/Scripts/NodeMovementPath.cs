@@ -12,7 +12,7 @@ using System.Collections;
 public class NodeMovementPath : MonoBehaviour {
     #region Fields
     
-    public List<MovementNode> nodes;
+    public List<MovementNode> nodes = new List<MovementNode>(0);
 
     #endregion
 
