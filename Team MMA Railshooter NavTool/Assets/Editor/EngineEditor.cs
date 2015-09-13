@@ -36,9 +36,15 @@ public class EngineEditor :  Editor
             EditorGUI.indentLevel++;
             for (int i = 0; i < waypointsArray.arraySize; i++)
             {
-                EditorGUILayout.LabelField("Movement " + (i+1));
-                EditorGUILayout.PropertyField(waypointsArray.GetArrayElementAtIndex(i));
-                
+                SerializedProperty showInEditor = waypointsArray.GetArrayElementAtIndex(i).FindPropertyRelative("showInEditor");
+
+                showInEditor.boolValue = EditorGUILayout.Foldout(showInEditor.boolValue, "Movement " + ( i + 1 ));
+
+                if (showInEditor.boolValue)
+                {
+                    //EditorGUILayout.LabelField("Movement " + (i + 1));
+                    EditorGUILayout.PropertyField(waypointsArray.GetArrayElementAtIndex(i));
+                }
             }
             EditorGUI.indentLevel--;
         }

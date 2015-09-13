@@ -12,29 +12,7 @@ public class ScriptEngine : MonoBehaviour {
 	// Use this for initialization
 	void Start () 
 	{
-
-        //waypoints [0] = new ScriptWaypoint ();
-        //waypoints [1] = new ScriptWaypoint();
-        //waypoints [2] = new ScriptWaypoint();
-
-        ////ScriptMove moveWaypoint = (ScriptMove)waypoints [0];
-        //waypoints[0].moveType = MovementTypes.MOVE;
-        //waypoints[0].waypointTime = 5f;
-        //waypoints[0].target = new Vector3 (17f, 0f, 0f);
-        ////waypoints[0] = moveWaypoint;
-
-        ////ScriptWait waitWaypoint = (ScriptWait)waypoints[1];
-        //waypoints[1].moveType = MovementTypes.WAIT;
-        //waypoints[1].waypointTime = 2f;
-        //waypoints[1].target = new Vector3(17f, 0f, 0f);
-        ////waypoints[1] = waitWaypoint;
-
-        ////ScriptMove moveWaypointNew = (ScriptMove)waypoints[2];
-        //waypoints[2].moveType = MovementTypes.MOVE;
-        //waypoints[2].waypointTime = 5f;
-        //waypoints[2].target = new Vector3(0f, 0f, 0f);
-        ////waypoints[2] = moveWaypointNew;
-
+        //Starts the Engine Coroutine
         StartCoroutine(MovementEngine());
 	}
 
@@ -46,27 +24,46 @@ public class ScriptEngine : MonoBehaviour {
 			switch(move.moveType)
 			{
 				case MovementTypes.MOVE:
-					//Grab the movement script off the waypoint
-					//ScriptMove movementScript = (ScriptMove)wp;
+                    if (move.endWaypoint != null && move.movementTime > 0)
+                    {
+                        //Do the movement coroutine with the help of the movement script
+                        StartCoroutine(movementMove(move.endWaypoint.transform.position, move.movementTime));
 
-                    move.target = move.waypoint.transform.position;
-
-					//Do the movement coroutine with the help of the movement script
-                    StartCoroutine(movementMove(move.target, move.waypointTime));
-					
-					//Wait for the specified amount of time on the movement waypoint
-                    yield return new WaitForSeconds(move.waypointTime);
+                        //Wait for the specified amount of time on the movement waypoint
+                        yield return new WaitForSeconds(move.movementTime);
+                    }
+                    else
+                    {
+                        Debug.Log("Movement was skipped due to missing element");
+                    }
 					break;
 				case MovementTypes.WAIT:
-					//Grabs the wait script off the waypoint
-					//ScriptWait waitScript = (ScriptWait)wp;
-					
-					//Does the wait
-                    StartCoroutine(movementWait(move.waypointTime));
-					
-					//Waits for the specified amount of time
-                    yield return new WaitForSeconds(move.waypointTime);
+                    if (move.movementTime > 0)
+                    {
+                        //Does the wait
+                        StartCoroutine(movementWait(move.movementTime));
+
+                        //Waits for the specified amount of time
+                        yield return new WaitForSeconds(move.movementTime);
+                    }
+                    else
+                    {
+                        Debug.Log("Wait was skipped due to missing element");
+                    }
 					break;
+                case MovementTypes.BEZIER:
+                    if (move.endWaypoint != null && move.curveWaypoint != null && move.movementTime > 0)
+                    {
+                        StartCoroutine(movementBezier(move.endWaypoint.transform.position, move.curveWaypoint.transform.position, move.movementTime));
+
+                        //Waits for the specified amount of time to continue
+                        yield return new WaitForSeconds(move.movementTime);
+                    }
+                    else
+                    {
+                        Debug.Log("Movement was skipped due to missing element");
+                    }
+                    break;
 				default:
 					Debug.Log ("Invalid movement type!");
 					break;
@@ -107,6 +104,43 @@ public class ScriptEngine : MonoBehaviour {
 		Debug.Log ("next waypoint");
 	}
 
+    IEnumerator movementBezier(Vector3 target, Vector3 curve, float time)
+    {
+        //Get the current time
+        float startTime = Time.time;
+        //find the time for the end of the movement
+        float endTime = startTime + time;
+
+        //get the start of the curve
+        Vector3 startCurve = transform.position;
+        //elapsed time 
+        float elapsedTime = 0f;
+
+        //While time is lest than the end time
+        while(Time.time < endTime )
+        {
+            
+            //track the current elapsed time after each frame
+            elapsedTime += Time.deltaTime;
+            float curTime = elapsedTime / time;
+
+            //move along the curve
+            transform.position = GetPoint(startCurve, target, curve, curTime);
+            yield return null;
+        }
+
+        //Snap the player to the target position at the end of the curve
+        transform.position = target;
+        
+    }
+
+    public Vector3 GetPoint(Vector3 start, Vector3 end, Vector3 curve, float t)
+    {
+        t = Mathf.Clamp01(t);
+        float oneMinusT = 1f - t;
+        return oneMinusT * oneMinusT * start + 2f * oneMinusT * t * curve + t * t * end;
+    }
+
     void OnDrawGizmos()
     {
         Vector3 lineStarting = transform.position;
@@ -116,14 +150,22 @@ public class ScriptEngine : MonoBehaviour {
             {
                 case MovementTypes.MOVE:
                     Gizmos.color = Color.blue;
-                    Gizmos.DrawLine(lineStarting, move.target);
-                    lineStarting = move.target;
+                    Gizmos.DrawLine(lineStarting, move.endWaypoint.transform.position);
+                    lineStarting = move.endWaypoint.transform.position;
                     break;
                 case MovementTypes.WAIT:
                     Gizmos.color = Color.yellow;
                     Gizmos.DrawWireSphere(lineStarting, 1f);
                     break;
                 case MovementTypes.BEZIER:
+                    Gizmos.color = Color.green;
+                    Vector3 bezierStart = lineStarting;
+                    for(int i = 1; i <= 10; i++)
+                    {
+                        Vector3 lineEnd = GetPoint(bezierStart, move.endWaypoint.transform.position, move.curveWaypoint.transform.position, i / 10f);
+                        Gizmos.DrawLine(lineStarting, lineEnd);
+                        lineStarting = lineEnd;
+                    }
                     break;
                 default:
                     break;
