@@ -11,7 +11,7 @@ using UnityEditor;
 /// 
 /// Description: NodeMovementPathEditor is a custom editor for NodeMovementPath
 /// </summary>
-[CustomEditor(typeof (NodeMovementPath))]
+//[CustomEditor(typeof (NodeMovementPath))]
 public class NodeMovementPathEditor : Editor {
     #region Fields
 

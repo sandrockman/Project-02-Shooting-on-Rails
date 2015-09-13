@@ -12,25 +12,27 @@ using System.Collections;
 public class NodeMovementPath : MonoBehaviour {
     #region Fields
 
-    public List<MovementNode> nodes = new List<MovementNode>(0);
+    public List<MovementNode> nodes;
 
     #endregion
 
     void Start() {
-        for (int i = 0; i < nodes.Count; i++) {
-            nodes[i] = new MovementNode(Vector3.zero, Vector3.one, MovementType.Straight);
-        }
     }
 
     void Update() {}
 
     void OnDrawGizmos() {
+        //draw node spheres
         for (int i = 0; i < nodes.Count; i++) {
             Gizmos.color = Color.yellow;
             Gizmos.DrawWireSphere(nodes[i].start, .5f);
             Gizmos.color = Color.blue;
             Gizmos.DrawWireSphere(nodes[i].end, .5f);
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere( nodes[i].bezierControl, .5f );
         }
+
+        //draw lines
     }
 
 }
@@ -42,6 +44,7 @@ public class MovementNode {
     public Vector3 bezierControl;
     public Vector3 lookPoint;
     public MovementType type;
+    public float travelTime;
 
     public MovementNode(Vector3 startPosition, Vector3 endPosition, MovementType type = MovementType.Straight) {
         start = startPosition;
@@ -49,6 +52,7 @@ public class MovementNode {
         this.type = type;
         lookPoint = Vector3.zero;
         bezierControl = Vector3.zero;
+        travelTime = 0;
     }
 }
 
