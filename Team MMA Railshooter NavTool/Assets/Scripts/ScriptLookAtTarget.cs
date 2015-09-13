@@ -18,14 +18,6 @@ public class ScriptLookAtTarget : MonoBehaviour {
 
     Quaternion startRotation;
     
-    //testing
-    void Update()
-    {
-        if (Input.GetButton("Jump"))
-        {
-            Activate();
-        }
-    }
 
     public void Activate()
     {
