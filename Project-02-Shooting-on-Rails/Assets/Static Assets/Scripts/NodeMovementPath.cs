@@ -11,8 +11,8 @@ using System.Collections;
 /// </summary>
 public class NodeMovementPath : MonoBehaviour {
     #region Fields
-    
-    public List<MovementNode> nodes = new List<MovementNode>(1);
+
+    public List<MovementNode> nodes = new List<MovementNode>(0);
 
     #endregion
 
@@ -42,7 +42,6 @@ public class MovementNode {
     public Vector3 bezierControl;
     public Vector3 lookPoint;
     public MovementType type;
-    public bool visibleInInspector;
 
     public MovementNode(Vector3 startPosition, Vector3 endPosition, MovementType type = MovementType.Straight) {
         start = startPosition;
@@ -50,7 +49,6 @@ public class MovementNode {
         this.type = type;
         lookPoint = Vector3.zero;
         bezierControl = Vector3.zero;
-        visibleInInspector = true;
     }
 }
 

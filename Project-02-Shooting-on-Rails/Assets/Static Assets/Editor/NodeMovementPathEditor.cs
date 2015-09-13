@@ -25,34 +25,29 @@ public class NodeMovementPathEditor : Editor {
     }
 
     public override void OnInspectorGUI() {
-        DrawDefaultInspector();
+        //DrawDefaultInspector();
 
         EditorGUILayout.Separator();
+        //draw node fields
+        EditorGUI.indentLevel++;
+        nmp.nodes[currNode].type = (MovementType) EditorGUILayout.EnumPopup("Node Type: ", nmp.nodes[currNode].type);
+        nmp.nodes[currNode].start = EditorGUILayout.Vector3Field("Start Pos: ", nmp.nodes[currNode].start);
+        nmp.nodes[currNode].end = EditorGUILayout.Vector3Field("End Pos: ", nmp.nodes[currNode].end);
 
-        nmp.nodes[currNode].visibleInInspector =
-            EditorGUILayout.Foldout(nmp.nodes[currNode].visibleInInspector, string.Format("Movement Node {0}", currNode + 1));
-
-        if (nmp.nodes[currNode].visibleInInspector) {
-            //draw node fields
-            EditorGUI.indentLevel++;
-            nmp.nodes[currNode].type = (MovementType)EditorGUILayout.EnumPopup("Node Type: ", nmp.nodes[currNode].type);
-            nmp.nodes[currNode].start = EditorGUILayout.Vector3Field("Start Pos: ", nmp.nodes[currNode].start);
-            nmp.nodes[currNode].end = EditorGUILayout.Vector3Field( "End Pos: ", nmp.nodes[currNode].end );
-
-            if (nmp.nodes[currNode].type == MovementType.LookAndReturn) {
-                nmp.nodes[currNode].lookPoint = EditorGUILayout.Vector3Field("Look Point: ", nmp.nodes[currNode].lookPoint);
-            }
-            EditorGUI.indentLevel--;
+        if (nmp.nodes[currNode].type == MovementType.LookAndReturn) {
+            nmp.nodes[currNode].lookPoint = EditorGUILayout.Vector3Field("Look Point: ", nmp.nodes[currNode].lookPoint);
         }
+        EditorGUI.indentLevel--;
 
         DrawButtons();
-        
+
         //refresh scene view
-        SceneView.RepaintAll(); 
+        SceneView.RepaintAll();
     }
 
     void DrawButtons() {
         Debug.Log("drawing");
+
         //buttons / movement through inspector
         EditorGUILayout.BeginHorizontal();
         if (nmp.nodes.Count > 0) {
