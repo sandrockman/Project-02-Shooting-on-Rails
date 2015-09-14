@@ -51,6 +51,7 @@ public class FacingWaypointEditor : PropertyDrawer {
                 break;
             default:
                 Debug.Log("Invalid waypoint type!");
+			break;
         }
 
         //show the enum with the new rect found earlier

@@ -3,15 +3,16 @@ using System.Collections;
 
 public class FacingEngine : MonoBehaviour {
     //waypoint array to be accessed by editor.
-    public FacingWaypoint[] waypoints;
+	public FacingWaypoint[] waypoints = new FacingWaypoint[1];
 
+	
     public CameraMovement cameraMovementScript;
 
     // Use this for initialization
     void Start () {
         //automatically adding and populating one element to test with
         //*
-		waypoints = new FacingWaypoint[1];
+		//waypoints = new FacingWaypoint[1];
 		waypoints [0] = new FacingWaypointForcedLocation ();
 		FacingWaypointForcedLocation locationScript = (FacingWaypointForcedLocation)waypoints [0];
 		locationScript.lookTarget = new Vector3 (10f, 10f, 10f);
