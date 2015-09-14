@@ -27,6 +27,16 @@ public class ScriptCameraShake : MonoBehaviour {
         originalPosition = transform.position;
         StartCoroutine("ShakeIt");
     }
+    //@ mike @ reference Andrew
+    public void Activate(float pEffectTime, float pMagnitude)
+    {
+        shakeTime = pEffectTime;
+        magnitude = pMagnitude;
+        originalPosition = transform.localPosition;
+        StartCoroutine("ShakeIt");
+    }
+
+    //end @ mike
 
     IEnumerator ShakeIt()
     {

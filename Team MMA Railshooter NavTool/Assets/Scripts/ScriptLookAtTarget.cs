@@ -3,7 +3,7 @@ using System.Collections;
 
 /// <summary>
 /// Author:Andrew Seba
-/// Description: Controls the transform to look at a specified target and renturn
+/// Description: Controls the transform to look at a specified target and return
 /// </summary>
 public class ScriptLookAtTarget : MonoBehaviour {
 

@@ -10,13 +10,27 @@ public class ScriptEngine : MonoBehaviour {
 	public ScriptMovements[] movements;
 
     public ScriptWaypoints[] facings;
-    public ScriptWaypoints[] effects;
+    public ScriptEffects[] effects;
+
+    public ScriptCameraShake cameraShakeScript;
+    public ScriptLookAtTarget lookAtScript;
+    public ScriptScreenFade fadeScript;
+    public ScriptSplatter splatterScript;
+
+    void Awake()
+    {
+        cameraShakeScript = Camera.main.GetComponent<ScriptCameraShake>();
+        lookAtScript = Camera.main.GetComponent<ScriptLookAtTarget>();
+        fadeScript = Camera.main.GetComponent<ScriptScreenFade>();
+        splatterScript = Camera.main.GetComponent<ScriptSplatter>();
+    }
 
 	// Use this for initialization
 	void Start () 
 	{
         //Starts the Engine Coroutine
         StartCoroutine(MovementEngine());
+        StartCoroutine(Effects());
 	}
 
 	IEnumerator MovementEngine()
@@ -72,8 +86,62 @@ public class ScriptEngine : MonoBehaviour {
 					break;
 					
 			}
-		}
+		}        
 	}
+
+    IEnumerator Effects()
+    {
+        foreach (ScriptEffects effect in effects)
+        {
+            switch (effect.effectType)
+            {
+                case EffectTypes.SPLATTER:
+                    if (effect.imageScale == 0)
+                    {
+                        splatterScript.Activate(effect.effectTime, effect.fadeInTime, effect.fadeOutTime);
+                    }
+                    else if (effect.imageScale != 0)
+                    {
+                        splatterScript.Activate(effect.effectTime, effect.fadeInTime, effect.fadeOutTime, effect.imageScale);
+                    }
+                    else
+                    {
+                        splatterScript.Activate();
+                    }
+                    break;
+                case EffectTypes.SHAKE:
+                    if (effect.magnitude != 0)
+                    {
+                        cameraShakeScript.Activate(effect.effectTime, effect.magnitude);
+                    }
+                    else
+                    {
+                        cameraShakeScript.Activate();
+                    }
+                    break;
+                case EffectTypes.FADE:
+                    if(effect.imageScale != 0)
+                    {
+                        splatterScript.Activate(effect.effectTime, effect.fadeInTime, effect.fadeOutTime, effect.imageScale);
+                    }
+                    else if(effect.imageScale == 0)
+                    {
+                        splatterScript.Activate(effect.effectTime, effect.fadeInTime, effect.fadeOutTime);
+                    }
+                    else
+                    {
+                        splatterScript.Activate();
+                    }
+                    break;
+                case EffectTypes.WAIT:
+                    yield return new WaitForSeconds(effect.effectTime);
+                    break;
+                default:
+                    break;
+
+            }
+        }
+    }
 
 	IEnumerator movementMove(Vector3 target, float time)
 	{

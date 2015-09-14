@@ -42,18 +42,21 @@ public class ScriptScreenFade : MonoBehaviour {
     }
 #endif
 
-    void Update()
-    {
-        if (Input.GetButton("Jump"))
-        {
-            Activate();
-        }
-    }
 
     public void Activate()
     {
         StartCoroutine("FadeIn");
     }
+
+    //@ mike @ reference Andrew
+    public void Activate(float pEffectTime, float pFadeInTime, float pFadeOutTime)
+    {
+        fadeStay = pEffectTime;
+        fadeInLength = pFadeInTime;
+        fadeOutLength = pFadeOutTime;
+        StartCoroutine("FadeIn");
+    }
+    // end @ mike
 
     IEnumerator FadeIn()
     {
