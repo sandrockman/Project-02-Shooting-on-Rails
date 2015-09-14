@@ -56,6 +56,29 @@ public class ScriptSplatter : MonoBehaviour {
 
     public void Activate()
     {
+        splatRect = new Rect(Random.Range(0, Screen.width / 2), Random.Range(0, Screen.height / 2), Screen.width / 16 * imageScale, Screen.height / 9 * imageScale);
+        StartCoroutine("SplatFadeIn");
+    }
+
+    public void Activate(float pEffectTime, float pFadeInTime, float pFadeOutTime)
+    {
+        //@ Mike
+        effectTime = pEffectTime;
+        fadeInTime = pFadeInTime;
+        fadeOutTime = pFadeOutTime;
+        //end @ mike
+        splatRect = new Rect(Random.Range(0, Screen.width / 2), Random.Range(0, Screen.height / 2), Screen.width / 16 * imageScale, Screen.height / 9 * imageScale);
+        StartCoroutine("SplatFadeIn");
+    }
+
+    public void Activate(float pEffectTime, float pFadeInTime, float pFadeOutTime, float pImageScale)
+    {
+        //@ Mike
+        effectTime = pEffectTime;
+        fadeInTime = pFadeInTime;
+        fadeOutTime = pFadeOutTime;
+        imageScale = pImageScale;
+        //end @ mike
         splatRect = new Rect(Random.Range(0, Screen.width /2), Random.Range(0, Screen.height /2), Screen.width / 16 * imageScale, Screen.height / 9 * imageScale);
         StartCoroutine("SplatFadeIn");
     }
