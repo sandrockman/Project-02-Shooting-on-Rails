@@ -40,6 +40,7 @@ public class FacingEngine : MonoBehaviour {
 					break;
 				case FacingTypes.FREE_MOVEMENT:
 					FacingWaypointFreeMovement freeMovementWaypoint = (FacingWaypointFreeMovement)wp;
+                    yield return new WaitForSeconds(freeMovementWaypoint.freeTime);
 					break;
 				default:
 					Debug.Log ("Inappropriate moving type!");
