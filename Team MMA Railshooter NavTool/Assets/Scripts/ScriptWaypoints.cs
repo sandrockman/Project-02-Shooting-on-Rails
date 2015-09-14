@@ -11,7 +11,7 @@ public class ScriptWaypoints
 
     
     public FacingTypes facingType;
-    public Transform[] targets;
+    public GameObject[] targets;
     public float[] facingTimes;
     public float[] holdTimes;
     

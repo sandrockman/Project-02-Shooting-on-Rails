@@ -107,6 +107,7 @@ public class ScriptEngine : MonoBehaviour {
 		ScriptErrorLogging.logError ("next waypoint");
 	}
 
+    //@reference Tiffany Fisher
     IEnumerator movementBezier(Vector3 target, Vector3 curve, float time)
     {
         //Get the current time
@@ -163,6 +164,7 @@ public class ScriptEngine : MonoBehaviour {
                 case MovementTypes.BEZIER:
                     Gizmos.color = Color.green;
                     Vector3 bezierStart = lineStarting;
+                    //@reference Tiffany Fisher
                     for(int i = 1; i <= 10; i++)
                     {
                         Vector3 lineEnd = GetPoint(bezierStart, move.endWaypoint.transform.position, move.curveWaypoint.transform.position, i / 10f);
@@ -182,6 +184,7 @@ public class ScriptEngine : MonoBehaviour {
     /// </summary>
     IEnumerator FacingEngine()
     {
+        ScriptLookAtTarget lookScript = Camera.main.GetComponent<ScriptLookAtTarget>();
         foreach (ScriptWaypoints facing in facings)
         {
             Debug.Log(facing.facingType);
@@ -191,9 +194,9 @@ public class ScriptEngine : MonoBehaviour {
                     if (facing.targets != null && facing.facingTimes[0] > 0 && facing.holdTimes[0] > 0 && facing.facingTimes[1] > 0)
                     {
                         //Do the facing action
-                        ScriptLookAtTarget lookScript = Camera.main.GetComponent<ScriptLookAtTarget>();
-
-
+                        lookScript.targets = facing.targets;
+                        lookScript.rotateSpeed = facing.facingTimes;
+                        lookScript.lockTime = facing.holdTimes;
                         //Wait for the specified amount of time on the facing waypoint
                         yield return new WaitForSeconds(facing.facingTimes[0] + facing.facingTimes[1] + facing.holdTimes[0]);
                     }
@@ -216,25 +219,19 @@ public class ScriptEngine : MonoBehaviour {
                 case FacingTypes.LOOKCHAIN:
                     if (facing.targets.Length >= facing.holdTimes.Length && facing.facingTimes.Length > facing.holdTimes.Length)
                     {
-                        Quaternion facingReturn = Camera.main.transform.rotation;
-                        for (int i = 0; i < facing.holdTimes.Length; i++)
+                        //Do the facing action
+                        lookScript.targets = facing.targets;
+                        lookScript.rotateSpeed = facing.facingTimes;
+                        lookScript.lockTime = facing.holdTimes;
+                        //Wait for the specified amount of time on the facing waypoint
+                        float waitTime = 0;
+                        for (int i = 0; i < facing.targets.Length; i++ )
                         {
-                            if (facing.targets[i] != null && facing.facingTimes[i] > 0 && facing.holdTimes[i] > 0)
-                            {
-                                //StartCoroutine(LookChain(facing.targets[i], facing.facingTimes[i], facing.holdTimes[i]));
-
-                                //Waits for the specified amount of time to continue
-                                yield return new WaitForSeconds(facing.facingTimes[i] + facing.holdTimes[i]);
-                            }
-                            else
-                            {
-                                ScriptErrorLogging.logError("Look Chain target was skipped due to missing element");
-                            }
+                            waitTime += facing.facingTimes[i];
+                            waitTime += facing.holdTimes[i];
                         }
-                        if (facing.facingTimes[facing.targets.Length] > 0)
-                        {
-                            
-                        }
+                        waitTime += facing.facingTimes[facing.targets.Length];
+                        yield return new WaitForSeconds(waitTime);
                     }
                     else
                     {
