@@ -9,6 +9,9 @@ public class ScriptEngine : MonoBehaviour {
 
 	public ScriptMovements[] movements;
 
+    public ScriptWaypoints[] facings;
+    public ScriptWaypoints[] effects;
+
 	// Use this for initialization
 	void Start () 
 	{
@@ -34,7 +37,7 @@ public class ScriptEngine : MonoBehaviour {
                     }
                     else
                     {
-                        Debug.Log("Movement was skipped due to missing element");
+                        ScriptErrorLogging.logError("Movement was skipped due to missing element");
                     }
 					break;
 				case MovementTypes.WAIT:
@@ -48,7 +51,7 @@ public class ScriptEngine : MonoBehaviour {
                     }
                     else
                     {
-                        Debug.Log("Wait was skipped due to missing element");
+                        ScriptErrorLogging.logError("Wait was skipped due to missing element");
                     }
 					break;
                 case MovementTypes.BEZIER:
@@ -61,11 +64,11 @@ public class ScriptEngine : MonoBehaviour {
                     }
                     else
                     {
-                        Debug.Log("Movement was skipped due to missing element");
+                        ScriptErrorLogging.logError("Movement was skipped due to missing element");
                     }
                     break;
 				default:
-					Debug.Log ("Invalid movement type!");
+					ScriptErrorLogging.logError ("Invalid movement type!");
 					break;
 					
 			}
@@ -99,9 +102,9 @@ public class ScriptEngine : MonoBehaviour {
 
 	IEnumerator movementWait(float time)
 	{
-		Debug.Log ("starting wait");
+		ScriptErrorLogging.logError ("starting wait");
 		yield return new WaitForSeconds (time);
-		Debug.Log ("next waypoint");
+		ScriptErrorLogging.logError ("next waypoint");
 	}
 
     IEnumerator movementBezier(Vector3 target, Vector3 curve, float time)
@@ -172,5 +175,77 @@ public class ScriptEngine : MonoBehaviour {
             }
         }
 
+    }
+
+    /// <summary>
+    /// @Author Marshall Mason & Mike Dobson
+    /// </summary>
+    IEnumerator FacingEngine()
+    {
+        foreach (ScriptWaypoints facing in facings)
+        {
+            Debug.Log(facing.facingType);
+            switch (facing.facingType)
+            {
+                case FacingTypes.LOOKAT:
+                    if (facing.targets != null && facing.facingTimes[0] > 0 && facing.holdTimes[0] > 0 && facing.facingTimes[1] > 0)
+                    {
+                        //Do the facing action
+                        ScriptLookAtTarget lookScript = Camera.main.GetComponent<ScriptLookAtTarget>();
+
+
+                        //Wait for the specified amount of time on the facing waypoint
+                        yield return new WaitForSeconds(facing.facingTimes[0] + facing.facingTimes[1] + facing.holdTimes[0]);
+                    }
+                    else
+                    {
+                        ScriptErrorLogging.logError("Look At was skipped due to missing element");
+                    }
+                    break;
+                case FacingTypes.WAIT:
+                    if (facing.facingTimes[0] > 0)
+                    {
+                        //Waits for the specified amount of time
+                        yield return new WaitForSeconds(facing.facingTimes[0]);
+                    }
+                    else
+                    {
+                        ScriptErrorLogging.logError("Facing Wait was skipped due to missing element");
+                    }
+                    break;
+                case FacingTypes.LOOKCHAIN:
+                    if (facing.targets.Length >= facing.holdTimes.Length && facing.facingTimes.Length > facing.holdTimes.Length)
+                    {
+                        Quaternion facingReturn = Camera.main.transform.rotation;
+                        for (int i = 0; i < facing.holdTimes.Length; i++)
+                        {
+                            if (facing.targets[i] != null && facing.facingTimes[i] > 0 && facing.holdTimes[i] > 0)
+                            {
+                                //StartCoroutine(LookChain(facing.targets[i], facing.facingTimes[i], facing.holdTimes[i]));
+
+                                //Waits for the specified amount of time to continue
+                                yield return new WaitForSeconds(facing.facingTimes[i] + facing.holdTimes[i]);
+                            }
+                            else
+                            {
+                                ScriptErrorLogging.logError("Look Chain target was skipped due to missing element");
+                            }
+                        }
+                        if (facing.facingTimes[facing.targets.Length] > 0)
+                        {
+                            
+                        }
+                    }
+                    else
+                    {
+                        ScriptErrorLogging.logError("Entire Look Chain was skipped due to missing element.");
+                    }
+                    break;
+                default:
+                    ScriptErrorLogging.logError("Invalid movement type!");
+                    break;
+
+            }
+        }
     }
 }

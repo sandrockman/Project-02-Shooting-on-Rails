@@ -5,16 +5,12 @@ using System.Collections;
 /// @Author Marshall Mason
 /// </summary>
 [System.Serializable]
-public class ScriptWaypoints : MonoBehaviour
+public class ScriptWaypoints
 {
- /*   public WaypointType waypointType;
+    public WaypointType waypointType;
 
-    public MovementType movementType;
-    public float waitTime;
-    public float moveTime;
-    public ScriptWaypoints nextPoint;
-
-    public FacingType facingType;
+    
+    public FacingTypes facingType;
     public Transform[] targets;
     public float[] facingTimes;
     public float[] holdTimes;
@@ -27,5 +23,5 @@ public class ScriptWaypoints : MonoBehaviour
     public virtual void GetWaypointInfo()
     {
         Debug.Log("Something is wrong here. Check overrides for GetWaypointInfo()");
-    }*/
+    }
 }
