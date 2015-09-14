@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+//new enum to store type of camera facing waypoint.
 public enum FacingTypes
 {
 	FORCED_LOCATION,
@@ -8,7 +8,7 @@ public enum FacingTypes
 }
 
 public class FacingWaypoint {
-
+    //stores 
 	public FacingTypes myType;
 
 }
