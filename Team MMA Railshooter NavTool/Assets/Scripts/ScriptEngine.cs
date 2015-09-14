@@ -153,23 +153,45 @@ public class ScriptEngine : MonoBehaviour {
             switch(move.moveType)
             {
                 case MovementTypes.MOVE:
-                    Gizmos.color = Color.blue;
-                    Gizmos.DrawLine(lineStarting, move.endWaypoint.transform.position);
-                    lineStarting = move.endWaypoint.transform.position;
+                    if (move.endWaypoint != null && move.movementTime > 0)
+                    {
+                        Gizmos.color = Color.blue;
+                        Gizmos.DrawLine(lineStarting, move.endWaypoint.transform.position);
+                        lineStarting = move.endWaypoint.transform.position;
+                    }
+                    else
+                    {
+                        Debug.Log("Missing Element in " + move.moveType + " waypoint");
+                    }
                     break;
                 case MovementTypes.WAIT:
-                    Gizmos.color = Color.yellow;
-                    Gizmos.DrawWireSphere(lineStarting, 1f);
+                    if (move.movementTime > 0)
+                    {
+                        Gizmos.color = Color.yellow;
+                        Gizmos.DrawWireSphere(lineStarting, 1f);
+                    }
+                    else
+                    {
+                        Debug.Log("Missing Element in " + move.moveType + " waypoint");
+                    }
                     break;
                 case MovementTypes.BEZIER:
-                    Gizmos.color = Color.green;
-                    Vector3 bezierStart = lineStarting;
-                    //@reference Tiffany Fisher
-                    for(int i = 1; i <= 10; i++)
+                    if (move.endWaypoint != null && move.curveWaypoint != null && move.movementTime > 0)
                     {
-                        Vector3 lineEnd = GetPoint(bezierStart, move.endWaypoint.transform.position, move.curveWaypoint.transform.position, i / 10f);
-                        Gizmos.DrawLine(lineStarting, lineEnd);
-                        lineStarting = lineEnd;
+                        Gizmos.color = Color.green;
+                        Vector3 bezierStart = lineStarting;
+                        //@reference Tiffany Fisher
+                        for (int i = 1; i <= 10; i++)
+                        {
+                            Vector3 lineEnd = GetPoint(bezierStart, move.endWaypoint.transform.position, move.curveWaypoint.transform.position, i / 10f);
+                            Gizmos.DrawLine(lineStarting, lineEnd);
+                            lineStarting = lineEnd;
+                        }
+                    }
+                    else
+                    {
+                        Debug.Log("Missing Element in " + move.moveType + " waypoint");
+
                     }
                     break;
                 default:
