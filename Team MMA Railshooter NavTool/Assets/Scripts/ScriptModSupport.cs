@@ -6,7 +6,8 @@ using System.IO;
 /// @Author Marshall Mason
 /// ScriptModSupport handles the I/O tasks of reading and outputting text files for modding.
 /// </summary>
-public class ScriptModSupport : MonoBehaviour {
+public class ScriptModSupport : MonoBehaviour
+{
 
     public GameObject movementWaypoint;
     public GameObject facingWaypoint;
@@ -19,7 +20,7 @@ public class ScriptModSupport : MonoBehaviour {
     FileInfo modFile = null;
     StreamReader reader = null;
 
-	void Start ()
+    void Start()
     {
         if (player == null)
         {
@@ -32,8 +33,8 @@ public class ScriptModSupport : MonoBehaviour {
         }
         if (movementWaypoint == null)
         {
-            movementWaypoint = (GameObject)Resources.Load("movementWaypoint.prefab",typeof(GameObject));
-            if(movementWaypoint == null)
+            movementWaypoint = (GameObject)Resources.Load("movementWaypoint.prefab", typeof(GameObject));
+            if (movementWaypoint == null)
             {
                 ScriptErrorLogging.logError("No movementWaypoint prefab found, please place one in the Resources folder");
                 Application.Quit();
@@ -59,20 +60,18 @@ public class ScriptModSupport : MonoBehaviour {
         }
 
         modFile = new FileInfo(Application.dataPath + "/waypoints.txt");
-        if(!modFile.Exists)
+        if (!modFile.Exists)
         {
             File.WriteAllText(Application.dataPath + "/waypoints.txt", defaultModFileText);
         }
         else
         {
-            GameObject[] moveTimeline;
-            GameObject[] effectTimeline;
-            GameObject[] facingTimeline;
 
             reader = modFile.OpenText();
-            if(reader.ReadLine() != defaultModFileText)
+            if (reader.ReadLine() != defaultModFileText)
             {
                 reader.Close();
+                System.Collections.Generic.List<ScriptMovements> tempMovements = new System.Collections.Generic.List<ScriptMovements>(0);
                 GameObject[] waypoints = GameObject.FindGameObjectsWithTag("Waypoint");
                 foreach (GameObject go in waypoints)
                 {
@@ -80,58 +79,92 @@ public class ScriptModSupport : MonoBehaviour {
                 }
                 reader = modFile.OpenText();
                 string inputLine = reader.ReadLine();
-                string[] keywords = inputLine.Split('_');
-                if (keywords[0].ToUpper() == "M")
+                while (inputLine != null)
                 {
-                    string[] words = keywords[1].Split(' ');
-                    switch ((MovementTypes)System.Enum.Parse(typeof(MovementTypes), words[0].ToUpper()))
+                    ScriptMovements tempMove;
+                    string[] coords;
+                    Vector3 target;
+                    string[] keywords = inputLine.Split('_');
+                    if (keywords[0].ToUpper() == "M")
                     {
-                        case MovementTypes.MOVE:
-                            //Movement waypoint spawning Code
-                            break;
-                        case MovementTypes.WAIT:
-                            //Wait waypoint spawning Code
-                            break;
-                        case MovementTypes.BEZIER:
-                            //Bezier waypoint spawning Code
-                            break;
+                        string[] words = keywords[1].Split(' ');
+                        switch ((MovementTypes)System.Enum.Parse(typeof(MovementTypes), words[0].ToUpper()))
+                        {
+                            case MovementTypes.MOVE:
+                                tempMove = new ScriptMovements();
+                                tempMove.moveType = MovementTypes.MOVE;
+                                tempMove.movementTime = System.Convert.ToSingle(words[1]);
+                                coords = words[2].Split(',');
+                                target = new Vector3(System.Convert.ToSingle(coords[0]),
+                                    System.Convert.ToSingle(coords[1]), System.Convert.ToSingle(coords[2]));
+                                tempMove.endWaypoint = (GameObject)Instantiate(movementWaypoint, target, Quaternion.identity);
+                                tempMovements.Add(tempMove);
+                                break;
+                            case MovementTypes.WAIT:
+                                tempMove = new ScriptMovements();
+                                tempMove.moveType = MovementTypes.MOVE;
+                                tempMove.movementTime = System.Convert.ToSingle(words[1]);
+                                tempMovements.Add(tempMove);
+                                break;
+                            case MovementTypes.BEZIER:
+                                tempMove = new ScriptMovements();
+                                tempMove.moveType = MovementTypes.MOVE;
+                                tempMove.movementTime = System.Convert.ToSingle(words[1]);
+                                coords = words[2].Split(',');
+                                target = new Vector3(System.Convert.ToSingle(coords[0]),
+                                    System.Convert.ToSingle(coords[1]), System.Convert.ToSingle(coords[2]));
+                                tempMove.endWaypoint = (GameObject)Instantiate(movementWaypoint, target, Quaternion.identity);
+                                coords = words[3].Split(',');
+                                target = new Vector3(System.Convert.ToSingle(coords[0]),
+                                    System.Convert.ToSingle(coords[1]), System.Convert.ToSingle(coords[2]));
+                                tempMove.curveWaypoint = (GameObject)Instantiate(movementWaypoint, target, Quaternion.identity);
+                                tempMovements.Add(tempMove);
+                                break;
+                        }
                     }
+                    else if (keywords[0].ToUpper() == "E")
+                    {
+                        string[] words = keywords[1].Split(' ');
+                        switch ((EffectTypes)System.Enum.Parse(typeof(EffectTypes), words[0].ToUpper()))
+                        {
+                            case EffectTypes.FADE:
+                                //Fade waypoint spawning Code
+                                break;
+                            case EffectTypes.SHAKE:
+                                //Shake waypoint spawning Code
+                                break;
+                            case EffectTypes.SPLATTER:
+                                //Splatter waypoint spawning Code
+                                break;
+                            case EffectTypes.WAIT:
+                                //Effect Wait waypoint spawning Code
+                                break;
+                        }
+                    }
+                    else if (keywords[0].ToUpper() == "F")
+                    {
+                        string[] words = keywords[1].Split(' ');
+                        switch ((FacingTypes)System.Enum.Parse(typeof(FacingTypes), words[0].ToUpper()))
+                        {
+                            case FacingTypes.LOOKAT:
+                                //Look At waypoint spawning Code
+                                break;
+                            case FacingTypes.LOOKCHAIN:
+                                //Look Chain waypoint spawning Code
+                                break;
+                            case FacingTypes.WAIT:
+                                //Facing Wait waypoint spawning Code
+                                break;
+                        }
+                    }
+                    inputLine = reader.ReadLine();
                 }
-                else if( keywords[0].ToUpper() == "E")
+                player.movements = new ScriptMovements[tempMovements.Count];
+                for (int i = 0; i < tempMovements.Count; i++)
                 {
-                    string[] words = keywords[1].Split(' ');
-                    switch ((EffectTypes)System.Enum.Parse(typeof(EffectTypes), words[0].ToUpper()))
-                    {
-                        case EffectTypes.FADE:
-                            //Fade waypoint spawning Code
-                            break;
-                        case EffectTypes.SHAKE:
-                            //Shake waypoint spawning Code
-                            break;
-                        case EffectTypes.SPLATTER:
-                            //Splatter waypoint spawning Code
-                        case EffectTypes.WAIT:
-                            //Effect Wait waypoint spawning Code
-                            break;
-                    }
-                }
-                else if(keywords[0].ToUpper() == "F")
-                {
-                    string[] words = keywords[1].Split(' ');
-                    switch ((FacingTypes)System.Enum.Parse(typeof(FacingTypes), words[0].ToUpper()))
-                    {
-                        case FacingTypes.LOOKAT:
-                            //Look At waypoint spawning Code
-                            break;
-                        case FacingTypes.LOOKCHAIN:
-                            //Look Chain waypoint spawning Code
-                            break;
-                        case FacingTypes.WAIT:
-                            //Facing Wait waypoint spawning Code
-                            break;
-                    }
+                    player.movements[i] = tempMovements[i];
                 }
             }
         }
-	}
+    }
 }

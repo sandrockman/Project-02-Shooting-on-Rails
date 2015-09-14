@@ -8,13 +8,13 @@ using System.Collections;
 public class ScriptLookAtTarget : MonoBehaviour {
 
     [Tooltip("How fast the camera will rotate to the target.")]
-    public float rotateSpeed = 0.5f;
+    public float[] rotateSpeed;
 
     [Tooltip("Place the target object for the camera to look at.")]
     public GameObject[] targets;
 
     [Tooltip("How long you will lock on target.")]
-    public float lockTime = 3.0f;
+    public float[] lockTime;
 
     Quaternion startRotation;
     
@@ -27,14 +27,14 @@ public class ScriptLookAtTarget : MonoBehaviour {
 
     IEnumerator LookAtTarget()
     {
-        foreach(GameObject target in targets)
+        for (int i = 0; i < targets.Length; i++ )
         {
             float timeElapsed = 0.0f;
-            while (timeElapsed < lockTime)
+            while (timeElapsed < lockTime[i])
             {
                 timeElapsed += Time.deltaTime;
-                Quaternion neededRotation = Quaternion.LookRotation(target.transform.position - transform.position);
-                transform.rotation = Quaternion.Slerp(transform.rotation, neededRotation, Time.deltaTime * rotateSpeed);
+                Quaternion neededRotation = Quaternion.LookRotation(targets[i].transform.position - transform.position);
+                transform.rotation = Quaternion.Slerp(transform.rotation, neededRotation, Time.deltaTime * rotateSpeed[i]);
                 yield return null;
             }
         }
@@ -48,7 +48,7 @@ public class ScriptLookAtTarget : MonoBehaviour {
         while (transform.forward != Vector3.forward)
         {
 
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, startRotation, rotateSpeed);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, startRotation, rotateSpeed[targets.Length]);
 
             yield return null;
         }

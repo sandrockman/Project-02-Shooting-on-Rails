@@ -9,6 +9,9 @@ public class ScriptEngine : MonoBehaviour {
 
 	public ScriptMovements[] movements;
 
+    public ScriptWaypoints[] facings;
+    public ScriptWaypoints[] effects;
+
 	// Use this for initialization
 	void Start () 
 	{
@@ -34,7 +37,7 @@ public class ScriptEngine : MonoBehaviour {
                     }
                     else
                     {
-                        Debug.Log("Movement was skipped due to missing element");
+                        ScriptErrorLogging.logError("Movement was skipped due to missing element");
                     }
 					break;
 				case MovementTypes.WAIT:
@@ -48,7 +51,7 @@ public class ScriptEngine : MonoBehaviour {
                     }
                     else
                     {
-                        Debug.Log("Wait was skipped due to missing element");
+                        ScriptErrorLogging.logError("Wait was skipped due to missing element");
                     }
 					break;
                 case MovementTypes.BEZIER:
@@ -61,11 +64,11 @@ public class ScriptEngine : MonoBehaviour {
                     }
                     else
                     {
-                        Debug.Log("Movement was skipped due to missing element");
+                        ScriptErrorLogging.logError("Movement was skipped due to missing element");
                     }
                     break;
 				default:
-					Debug.Log ("Invalid movement type!");
+					ScriptErrorLogging.logError ("Invalid movement type!");
 					break;
 					
 			}
@@ -99,11 +102,12 @@ public class ScriptEngine : MonoBehaviour {
 
 	IEnumerator movementWait(float time)
 	{
-		Debug.Log ("starting wait");
+		ScriptErrorLogging.logError ("starting wait");
 		yield return new WaitForSeconds (time);
-		Debug.Log ("next waypoint");
+		ScriptErrorLogging.logError ("next waypoint");
 	}
 
+    //@reference Tiffany Fisher
     IEnumerator movementBezier(Vector3 target, Vector3 curve, float time)
     {
         //Get the current time
@@ -149,22 +153,45 @@ public class ScriptEngine : MonoBehaviour {
             switch(move.moveType)
             {
                 case MovementTypes.MOVE:
-                    Gizmos.color = Color.blue;
-                    Gizmos.DrawLine(lineStarting, move.endWaypoint.transform.position);
-                    lineStarting = move.endWaypoint.transform.position;
+                    if (move.endWaypoint != null && move.movementTime > 0)
+                    {
+                        Gizmos.color = Color.blue;
+                        Gizmos.DrawLine(lineStarting, move.endWaypoint.transform.position);
+                        lineStarting = move.endWaypoint.transform.position;
+                    }
+                    else
+                    {
+                        Debug.Log("Missing Element in " + move.moveType + " waypoint");
+                    }
                     break;
                 case MovementTypes.WAIT:
-                    Gizmos.color = Color.yellow;
-                    Gizmos.DrawWireSphere(lineStarting, 1f);
+                    if (move.movementTime > 0)
+                    {
+                        Gizmos.color = Color.yellow;
+                        Gizmos.DrawWireSphere(lineStarting, 1f);
+                    }
+                    else
+                    {
+                        Debug.Log("Missing Element in " + move.moveType + " waypoint");
+                    }
                     break;
                 case MovementTypes.BEZIER:
-                    Gizmos.color = Color.green;
-                    Vector3 bezierStart = lineStarting;
-                    for(int i = 1; i <= 10; i++)
+                    if (move.endWaypoint != null && move.curveWaypoint != null && move.movementTime > 0)
                     {
-                        Vector3 lineEnd = GetPoint(bezierStart, move.endWaypoint.transform.position, move.curveWaypoint.transform.position, i / 10f);
-                        Gizmos.DrawLine(lineStarting, lineEnd);
-                        lineStarting = lineEnd;
+                        Gizmos.color = Color.green;
+                        Vector3 bezierStart = lineStarting;
+                        //@reference Tiffany Fisher
+                        for (int i = 1; i <= 10; i++)
+                        {
+                            Vector3 lineEnd = GetPoint(bezierStart, move.endWaypoint.transform.position, move.curveWaypoint.transform.position, i / 10f);
+                            Gizmos.DrawLine(lineStarting, lineEnd);
+                            lineStarting = lineEnd;
+                        }
+                    }
+                    else
+                    {
+                        Debug.Log("Missing Element in " + move.moveType + " waypoint");
+
                     }
                     break;
                 default:
@@ -172,5 +199,72 @@ public class ScriptEngine : MonoBehaviour {
             }
         }
 
+    }
+
+    /// <summary>
+    /// @Author Marshall Mason & Mike Dobson
+    /// </summary>
+    IEnumerator FacingEngine()
+    {
+        ScriptLookAtTarget lookScript = Camera.main.GetComponent<ScriptLookAtTarget>();
+        foreach (ScriptWaypoints facing in facings)
+        {
+            Debug.Log(facing.facingType);
+            switch (facing.facingType)
+            {
+                case FacingTypes.LOOKAT:
+                    if (facing.targets != null && facing.facingTimes[0] > 0 && facing.holdTimes[0] > 0 && facing.facingTimes[1] > 0)
+                    {
+                        //Do the facing action
+                        lookScript.targets = facing.targets;
+                        lookScript.rotateSpeed = facing.facingTimes;
+                        lookScript.lockTime = facing.holdTimes;
+                        //Wait for the specified amount of time on the facing waypoint
+                        yield return new WaitForSeconds(facing.facingTimes[0] + facing.facingTimes[1] + facing.holdTimes[0]);
+                    }
+                    else
+                    {
+                        ScriptErrorLogging.logError("Look At was skipped due to missing element");
+                    }
+                    break;
+                case FacingTypes.WAIT:
+                    if (facing.facingTimes[0] > 0)
+                    {
+                        //Waits for the specified amount of time
+                        yield return new WaitForSeconds(facing.facingTimes[0]);
+                    }
+                    else
+                    {
+                        ScriptErrorLogging.logError("Facing Wait was skipped due to missing element");
+                    }
+                    break;
+                case FacingTypes.LOOKCHAIN:
+                    if (facing.targets.Length >= facing.holdTimes.Length && facing.facingTimes.Length > facing.holdTimes.Length)
+                    {
+                        //Do the facing action
+                        lookScript.targets = facing.targets;
+                        lookScript.rotateSpeed = facing.facingTimes;
+                        lookScript.lockTime = facing.holdTimes;
+                        //Wait for the specified amount of time on the facing waypoint
+                        float waitTime = 0;
+                        for (int i = 0; i < facing.targets.Length; i++ )
+                        {
+                            waitTime += facing.facingTimes[i];
+                            waitTime += facing.holdTimes[i];
+                        }
+                        waitTime += facing.facingTimes[facing.targets.Length];
+                        yield return new WaitForSeconds(waitTime);
+                    }
+                    else
+                    {
+                        ScriptErrorLogging.logError("Entire Look Chain was skipped due to missing element.");
+                    }
+                    break;
+                default:
+                    ScriptErrorLogging.logError("Invalid movement type!");
+                    break;
+
+            }
+        }
     }
 }
